@@ -8,24 +8,28 @@ const ProductData = createContext();
 function Context({ children }) {
   const [componentRights, setComponentRights] = useState([]);
   const [themeConfig, setThemeConfig] = useState([]);
-  useEffect(() => {
-    const promises = [getFeatures(), getThemes()];
-    Promise.all(promises).then((response) => {
-      response.map((item, index) => {
-        if (index === 0) {
-          setComponentRights(item);
-        }
-        if (index === 1) {
-          setThemeConfig(item);
-        }
-      });
+  const getThemeValues = () => {
+    getThemes().then((res) => {
+      setThemeConfig(res);
     });
+  };
+  const getComponentRights = () => {
+    getFeatures().then((res) => setComponentRights(res));
+  };
+  useEffect(() => {
+    getThemeValues();
+    getComponentRights();
   }, []);
   return (
     <ProductData.Provider
-      value={{ componentRights: componentRights, themeConfig: themeConfig }}
+      value={{
+        componentRights: componentRights,
+        themeConfig: themeConfig,
+        getThemeValues: getThemeValues,
+        getComponentRights: getComponentRights,
+      }}
     >
-      {componentRights.length > 0 || themeConfig.length > 0 ? (
+      {componentRights.length > 0 || themeConfig.length > 0 || true ? (
         children
       ) : (
         <div>Loading..</div>

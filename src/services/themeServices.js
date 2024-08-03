@@ -3,6 +3,16 @@ export const getThemes = () => {
   return fetch(`${END_POINT}/v1/user/theme`).then((res) => res.json());
 };
 
+export const addtheme = (themeData) => {
+  return fetch(`${END_POINT}/v1/admin/add-theme`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(themeData),
+  }).then((res) => res.json());
+};
+
 export const updateTheme = (themeData) => {
   return fetch(`${END_POINT}/v1/admin/update-theme`, {
     method: "POST",

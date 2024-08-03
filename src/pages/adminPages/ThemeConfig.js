@@ -2,17 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import { ProductData } from "../../Context";
 import Button from "../../components/commonComponents/Button";
 import { trashIcon } from "../../assets/svgIcons";
-import { deleteTheme, updateTheme } from "../../services/themeServices";
+import {
+  addtheme,
+  deleteTheme,
+  getThemes,
+  updateTheme,
+} from "../../services/themeServices";
+import { excludeFields } from "../../utils/exculdeFields";
 
 export default function ThemeConfig() {
-  const { themeConfig } = useContext(ProductData);
+  const { themeConfig, getThemeValues } = useContext(ProductData);
   const [themeData, setThemeData] = useState([]);
+  const [themeName, setThemeName] = useState("");
+  const [themeValue, setThemeValue] = useState("");
 
   useEffect(() => {
     setThemeData(themeConfig);
   }, [themeConfig]);
 
-  const excludeFields = ["_id", "__v"];
   const handleColorChange = (id, color, themeName) => {
     const filterData = themeData.map((item) => {
       if (item._id === id) {
@@ -25,66 +32,108 @@ export default function ThemeConfig() {
       }
       return item;
     });
-    setThemeData(filterData);
+    updateTheme(filterData).then((res) => {
+      getThemeValues();
+    });
   };
 
-  const updateThemeData = () => {
-    updateTheme(themeData).then((res) => console.log(res));
-  };
   const handleDeltetheme = (id) => {
-    const filterData = themeData.filter((item) => item._id !== id);
-    setThemeData(filterData);
-    deleteTheme(id).then((res) => console.log(res));
+    deleteTheme(id).then((res) => {
+      getThemeValues();
+    });
   };
+
+  const handleTheme = (e) => {
+    if (e.target.id === "themeName") {
+      setThemeName(e.target.value);
+    } else {
+      setThemeValue(e.target.value);
+    }
+  };
+
+  const handleAddTheme = () => {
+    addtheme({
+      [themeName]: {
+        value: themeValue,
+      },
+    }).then((res) => {
+      setThemeName("");
+      setThemeValue("");
+      getThemeValues();
+    });
+  };
+
   return (
-    <>
-      <div className="flex justify-end w-full mr-4">
-        <div className="mr-2">
+    <div className="md:mx-40 md:mt-10 m-4 flex md:justify-around md:flex-row flex-col md:gap-2 gap-4">
+      <div className="flex flex-col gap-4 flex-1">
+        <h1 className="font-bold text-2xl">Add Theme Name & Values</h1>
+        <input
+          type="text"
+          className="md:w-52 w-full"
+          id="themeName"
+          value={themeName ? themeName : ""}
+          onChange={handleTheme}
+        />
+        <input
+          type="color"
+          className="md:w-52 w-full"
+          id="value"
+          value={themeValue ? themeValue : "#33333"}
+          onChange={handleTheme}
+        />
+        <div className="w-32">
           <Button
-            text="Update Theme"
-            bgColor="bg-tertiary"
+            text="Add Theme"
+            bgColor="bg-primary"
             textColor="text-textSecondary"
-            handleClick={updateThemeData}
+            handleClick={handleAddTheme}
+            disabled={!themeName.length > 0}
           />
         </div>
-
-        <Button
-          text="Add Theme"
-          bgColor="bg-primary"
-          textColor="text-textSecondary"
-        />
       </div>
-      <div className="flex flex-col gap-4 justify-center items-center">
-        {themeData.map((item) =>
-          Object.keys(item).map((theme) => (
-            <>
-              {!excludeFields.includes(theme) && (
-                <div className="w-[40%] ">
-                  <div className="flex justify-center items-center">
-                    <div className="flex-1 w-32 truncate">{theme}</div>
-                    <input
-                      type="color"
-                      value={item[theme].value}
-                      className="w-32 flex-1"
-                      onChange={(e) =>
-                        handleColorChange(item._id, e.target.value, theme)
-                      }
-                    />
-                    <div
-                      className="text-error flex-1 cursor-pointer"
-                      onClick={() => {
-                        handleDeltetheme(item._id);
-                      }}
-                    >
-                      {trashIcon}
+      <div>
+        <div className="flex flex-col gap-4 justify-center md:items-center items-stretch">
+          {themeData.length > 0 && (
+            <div className="font-semibold text-xl">Available Themes</div>
+          )}
+          {themeData.map((item) =>
+            Object.keys(item).map((theme) => (
+              <>
+                {!excludeFields.includes(theme) && (
+                  <div className="mt-4">
+                    <div className="flex md:justify-center md:items-center justify-between gap-4">
+                      <div className="md:w-32 truncate md:flex-none flex-1">
+                        {theme}
+                      </div>
+                      <input
+                        type="color"
+                        value={item[theme].value}
+                        className="md:w-32 md:flex-none flex-1"
+                        onChange={(e) =>
+                          handleColorChange(item._id, e.target.value, theme)
+                        }
+                      />
+                      <div
+                        className="text-error cursor-pointer"
+                        onClick={() => {
+                          handleDeltetheme(item._id);
+                        }}
+                      >
+                        {trashIcon}
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </>
-          ))
-        )}
+                )}
+              </>
+            ))
+          )}
+          {themeData.length === 0 && (
+            <div className="font-semibold text-xl">
+              Theme List is empty please add theme Values
+            </div>
+          )}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

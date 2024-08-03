@@ -9,7 +9,11 @@ export default function Button({
 }) {
   return (
     <button
-      className={`font-bold py-2 px-4 rounded inline-flex items-center ${bgColor} ${textColor}`}
+      className={`font-bold py-2 px-4 rounded inline-flex items-center ${
+        disabled
+          ? `bg-grey-800/50 cursor-not-allowed`
+          : `${bgColor} cursor-pointer`
+      } ${textColor}`}
       onClick={handleClick}
       disabled={disabled}
     >
