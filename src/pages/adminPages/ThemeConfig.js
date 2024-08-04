@@ -8,7 +8,7 @@ import {
   getThemes,
   updateTheme,
 } from "../../services/themeServices";
-import { excludeFields } from "../../utils/exculdeFields";
+import { excludeFields, themeRights } from "../../utils/exculdeFields";
 
 export default function ThemeConfig() {
   const { themeConfig, getThemeValues } = useContext(ProductData);
@@ -113,14 +113,19 @@ export default function ThemeConfig() {
                           handleColorChange(item._id, e.target.value, theme)
                         }
                       />
-                      <div
-                        className="text-error cursor-pointer"
+                      <button
+                        className={`  ${
+                          themeRights.includes(theme)
+                            ? "cursor-not-allowed text-grey-800/50"
+                            : "cursor-pointer text-error"
+                        }`}
                         onClick={() => {
                           handleDeltetheme(item._id);
                         }}
+                        disabled={themeRights.includes(theme)}
                       >
                         {trashIcon}
-                      </div>
+                      </button>
                     </div>
                   </div>
                 )}

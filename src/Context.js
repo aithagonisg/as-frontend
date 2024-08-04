@@ -16,6 +16,13 @@ function Context({ children }) {
   const getComponentRights = () => {
     getFeatures().then((res) => setComponentRights(res));
   };
+
+  const isAccessibleComponent = (rightName) => {
+    return (
+      componentRights.filter((item) => item[rightName]?.isAccessible)[0] ||
+      false
+    );
+  };
   useEffect(() => {
     getThemeValues();
     getComponentRights();
@@ -27,6 +34,7 @@ function Context({ children }) {
         themeConfig: themeConfig,
         getThemeValues: getThemeValues,
         getComponentRights: getComponentRights,
+        isAccessibleComponent: isAccessibleComponent,
       }}
     >
       {componentRights.length > 0 || themeConfig.length > 0 || true ? (
