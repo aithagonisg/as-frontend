@@ -65,7 +65,7 @@ export default function ThemeConfig() {
 
   return (
     <div className="md:mx-40 md:mt-10 m-4 flex md:justify-around md:flex-row flex-col md:gap-2 gap-4">
-      <div className="flex flex-col gap-4 flex-1">
+      <div className="flex flex-col gap-4 md:flex-none flex-1">
         <h1 className="font-bold text-2xl">Add Theme Name & Values</h1>
         <input
           type="text"
@@ -92,7 +92,7 @@ export default function ThemeConfig() {
         </div>
       </div>
       <div>
-        <div className="flex flex-col gap-4 justify-center md:items-center items-stretch">
+        <div className="flex flex-col gap-4 justify-center md:items-start items-stretch">
           {themeData.length > 0 && (
             <div className="font-semibold text-xl">Available Themes</div>
           )}
