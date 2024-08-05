@@ -34,6 +34,7 @@ module.exports = {
           "--color-borderDisabled",
           "189 189 189"
         ), //#BDBDBD
+        navColor: withOpacityValue("--color-navColor", "57 62 70"), // #393E46
         error: withOpacityValue("--color-error", "207 0 15"), //#CF000F
         success: withOpacityValue("--color-success", "0 122 75"), //#007A4B
         warning: withOpacityValue("--color-warning", "219 164 0"), //#DBA400

@@ -9,9 +9,14 @@ import {
   updateTheme,
 } from "../../services/themeServices";
 import { excludeFields, themeRights } from "../../utils/exculdeFields";
+import Input from "../../components/commonComponents/Input";
+import Heading from "../../components/commonComponents/Heading";
+import Label from "../../components/commonComponents/Label";
+import Dropdown from "../../components/commonComponents/Dropdown";
+import Checkbox from "../../components/commonComponents/Checkbox";
 
 export default function ThemeConfig() {
-  const { themeConfig, getThemeValues } = useContext(ProductData);
+  const { themeConfig, getThemeValues, handleToast } = useContext(ProductData);
   const [themeData, setThemeData] = useState([]);
   const [themeName, setThemeName] = useState("");
   const [themeValue, setThemeValue] = useState("");
@@ -33,12 +38,14 @@ export default function ThemeConfig() {
       return item;
     });
     updateTheme(filterData).then((res) => {
+      handleToast(res.message, "success");
       getThemeValues();
     });
   };
 
   const handleDeltetheme = (id) => {
     deleteTheme(id).then((res) => {
+      handleToast(res.message, "success");
       getThemeValues();
     });
   };
@@ -57,6 +64,7 @@ export default function ThemeConfig() {
         value: themeValue,
       },
     }).then((res) => {
+      handleToast(res.message, "success");
       setThemeName("");
       setThemeValue("");
       getThemeValues();
@@ -66,15 +74,19 @@ export default function ThemeConfig() {
   return (
     <div className="md:mx-40 md:mt-10 m-4 flex md:justify-around md:flex-row flex-col md:gap-2 gap-4">
       <div className="flex flex-col gap-4 md:flex-none flex-1">
-        <h1 className="font-bold text-2xl">Add Theme Name & Values</h1>
-        <input
+        <Heading
+          level={1}
+          text="Add Theme Name & Values"
+          boldClass="font-bold"
+        />
+        <Input
           type="text"
           className="md:w-52 w-full"
           id="themeName"
           value={themeName ? themeName : ""}
           onChange={handleTheme}
         />
-        <input
+        <Input
           type="color"
           className="md:w-52 w-full"
           id="value"
@@ -88,13 +100,18 @@ export default function ThemeConfig() {
             textColor="text-textSecondary"
             handleClick={handleAddTheme}
             disabled={!themeName.length > 0}
+            bgNone={false}
           />
         </div>
       </div>
       <div>
         <div className="flex flex-col gap-4 justify-center md:items-start items-stretch">
           {themeData.length > 0 && (
-            <div className="font-semibold text-xl">Available Themes</div>
+            <Heading
+              level={2}
+              text="Available Themes"
+              boldClass="font-semibold"
+            />
           )}
           {themeData.map((item) =>
             Object.keys(item).map((theme) => (
@@ -103,42 +120,38 @@ export default function ThemeConfig() {
                   <div className="mt-4">
                     <div className="flex md:justify-center md:items-center justify-between gap-4">
                       <div className="md:w-32 truncate md:flex-none flex-1">
-                        {theme}
+                        <Label text={theme} />
                       </div>
-                      <input
-                        type="color"
-                        value={item[theme].value}
-                        className="md:w-32 md:flex-none flex-1"
-                        onChange={(e) =>
-                          handleColorChange(item._id, e.target.value, theme)
-                        }
-                      />
-                      <button
-                        className={`  ${
-                          themeRights.includes(theme)
-                            ? "cursor-not-allowed text-grey-800/50"
-                            : "cursor-pointer text-error"
-                        }`}
-                        onClick={() => {
+                      <div className="md:w-32 md:flex-none flex-1">
+                        <Input
+                          type="color"
+                          value={item[theme].value}
+                          onChange={(e) =>
+                            handleColorChange(item._id, e.target.value, theme)
+                          }
+                        />
+                      </div>
+                      <Button
+                        text=""
+                        handleClick={() => {
                           handleDeltetheme(item._id);
                         }}
+                        leadingIcon={trashIcon}
                         disabled={themeRights.includes(theme)}
-                      >
-                        {trashIcon}
-                      </button>
+                        bgNone={themeRights.includes(theme)}
+                        textColor={
+                          !themeRights.includes(theme) ? "text-error" : ""
+                        }
+                      />
                     </div>
                   </div>
                 )}
               </>
             ))
           )}
-          {themeData.length === 0 && (
-            <div className="font-semibold text-xl">
-              Theme List is empty please add theme Values
-            </div>
-          )}
         </div>
       </div>
+      <Checkbox labelText="Admin" />
     </div>
   );
 }

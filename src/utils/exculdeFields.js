@@ -19,6 +19,7 @@ export const themeRights = [
   "warning",
   "navbar",
   "tableHeader",
+  "navColor",
 ];
 
 export const componentRightsList = [

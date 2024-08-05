@@ -6,18 +6,29 @@ export default function Button({
   textColor,
   handleClick,
   disabled = false,
+  leadingIcon,
+  endIcon,
+  bgNone,
 }) {
   return (
     <button
-      className={`font-bold py-2 px-4 rounded inline-flex items-center ${
+      className={`font-bold py-2 px-2 rounded inline-flex items-center  ${
         disabled
-          ? `bg-grey-800/50 cursor-not-allowed`
-          : `${bgColor} cursor-pointer`
-      } ${textColor}`}
+          ? `cursor-not-allowed text-textPrimary  ${
+              bgNone ? "" : "bg-disabled"
+            }`
+          : `${bgColor && !bgNone ? bgColor : ""} ${
+              !textColor ? "text-textSecondary" : `${textColor}`
+            } cursor-pointer`
+      }`}
       onClick={handleClick}
       disabled={disabled}
     >
-      <span>{text}</span>
+      <span className="flex justify-between items-center w-full">
+        {leadingIcon && <span>{leadingIcon ? leadingIcon : ""}</span>}
+        {text && <span>{text}</span>}
+        {endIcon && <span>{endIcon ? endIcon : ""}</span>}
+      </span>
     </button>
   );
 }

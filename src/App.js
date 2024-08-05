@@ -3,6 +3,8 @@ import { BrowserRouter } from "react-router-dom";
 import CustomRoutes from "./routes/CustomRoutes";
 import { ProductData } from "./Context";
 import { excludeFields } from "./utils/exculdeFields";
+import Input from "./components/commonComponents/Input";
+import ModalPopup from "./components/commonComponents/ModalPopup";
 
 export default function App() {
   const { themeConfig } = useContext(ProductData);
