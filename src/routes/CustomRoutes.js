@@ -7,13 +7,20 @@ import PublicRoutes from "./PublicRoutes";
 import CommonLogin from "../pages/CommonLogin";
 import CommonHeader from "../components/CommonHeader";
 import CommonFooter from "../components/CommonFooter";
+import CommonRegister from "../pages/CommonRegister";
 
 export default function CustomRoutes() {
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   return (
     <>
       {isAuthenticated && <CommonHeader />}
-      <div className="h-[calc(100%-112px)] overflow-auto bg-bodyBackground">
+      <div
+        className={`${
+          isAuthenticated
+            ? "h-[calc(100%-112px)] bg-bodyBackground"
+            : "h-full bg-background"
+        } overflow-auto `}
+      >
         <Routes>
           <Route
             path="/themeConfig"
@@ -36,6 +43,14 @@ export default function CustomRoutes() {
             element={
               <PublicRoutes isAuthenticated={isAuthenticated}>
                 <CommonLogin />
+              </PublicRoutes>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoutes isAuthenticated={isAuthenticated}>
+                <CommonRegister />
               </PublicRoutes>
             }
           />

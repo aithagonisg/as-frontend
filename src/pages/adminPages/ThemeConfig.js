@@ -5,16 +5,12 @@ import { trashIcon } from "../../assets/svgIcons";
 import {
   addtheme,
   deleteTheme,
-  getThemes,
   updateTheme,
 } from "../../services/themeServices";
 import { excludeFields, themeRights } from "../../utils/exculdeFields";
 import Input from "../../components/commonComponents/Input";
 import Heading from "../../components/commonComponents/Heading";
 import Label from "../../components/commonComponents/Label";
-import Dropdown from "../../components/commonComponents/Dropdown";
-import Checkbox from "../../components/commonComponents/Checkbox";
-
 export default function ThemeConfig() {
   const { themeConfig, getThemeValues, handleToast } = useContext(ProductData);
   const [themeData, setThemeData] = useState([]);
@@ -26,18 +22,14 @@ export default function ThemeConfig() {
   }, [themeConfig]);
 
   const handleColorChange = (id, color, themeName) => {
-    const filterData = themeData.map((item) => {
-      if (item._id === id) {
-        return {
-          ...item,
-          [themeName]: {
-            value: color,
-          },
-        };
-      }
-      return item;
-    });
-    updateTheme(filterData).then((res) => {
+    updateTheme([
+      {
+        _id: id,
+        [themeName]: {
+          value: color,
+        },
+      },
+    ]).then((res) => {
       handleToast(res.message, "success");
       getThemeValues();
     });
@@ -85,6 +77,7 @@ export default function ThemeConfig() {
           id="themeName"
           value={themeName ? themeName : ""}
           onChange={handleTheme}
+          placeholder="Add Theme"
         />
         <Input
           type="color"
@@ -151,7 +144,6 @@ export default function ThemeConfig() {
           )}
         </div>
       </div>
-      <Checkbox labelText="Admin" />
     </div>
   );
 }

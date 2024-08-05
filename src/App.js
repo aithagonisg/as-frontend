@@ -3,8 +3,6 @@ import { BrowserRouter } from "react-router-dom";
 import CustomRoutes from "./routes/CustomRoutes";
 import { ProductData } from "./Context";
 import { excludeFields } from "./utils/exculdeFields";
-import Input from "./components/commonComponents/Input";
-import ModalPopup from "./components/commonComponents/ModalPopup";
 
 export default function App() {
   const { themeConfig } = useContext(ProductData);
@@ -23,8 +21,8 @@ export default function App() {
     return `${r} ${g} ${b}`; // returns a string like "68 4 191"
   }
   useEffect(() => {
-    themeConfig.map((item) => {
-      Object.keys(item).map((theme) => {
+    themeConfig.forEach((item) => {
+      Object.keys(item).forEach((theme) => {
         if (!excludeFields.includes(theme)) {
           console.log(`--color-${theme}`, item[theme]?.value);
           document.documentElement.style.setProperty(

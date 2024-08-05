@@ -24,7 +24,13 @@ export default function Button({
       onClick={handleClick}
       disabled={disabled}
     >
-      <span className="flex justify-between items-center w-full">
+      <span
+        className={`flex items-center w-full ${
+          (leadingIcon && text) || (endIcon && text)
+            ? "justify-between"
+            : "justify-center"
+        }`}
+      >
         {leadingIcon && <span>{leadingIcon ? leadingIcon : ""}</span>}
         {text && <span>{text}</span>}
         {endIcon && <span>{endIcon ? endIcon : ""}</span>}

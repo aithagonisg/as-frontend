@@ -11,7 +11,7 @@ export default function CommonHeader() {
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
 
-  const getAdminNav = () => (
+  const GetAdminNav = () => (
     <div className="flex md:flex-row flex-col md:gap-10 gap-2  md:font-semibold font-bold">
       <NavLink
         to="/componentRights"
@@ -26,23 +26,27 @@ export default function CommonHeader() {
       >
         ComponentRights
       </NavLink>
-      <NavLink
-        to="/themeConfig"
-        className={({ isActive }) =>
-          `${
-            isActive
-              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
-              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
-          }`
-        }
-        onClick={() => setShowMenu(false)}
-      >
-        ThemeRights
-      </NavLink>
+      {isAccessibleComponent("themeNavigation") ? (
+        <NavLink
+          to="/themeConfig"
+          className={({ isActive }) =>
+            `${
+              isActive
+                ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+                : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+            }`
+          }
+          onClick={() => setShowMenu(false)}
+        >
+          ThemeRights
+        </NavLink>
+      ) : (
+        <div></div>
+      )}
     </div>
   );
 
-  const profileItems = () => (
+  const ProfileItems = () => (
     <div className="text-textPrimary font-semibold">
       <ul>
         <li className="h-10 flex items-center border-b border-borderColor">
@@ -71,11 +75,11 @@ export default function CommonHeader() {
         ) : (
           <div className="w-[125.81px]"></div>
         )}
-        {getAdminNav()}
+        <GetAdminNav />
         <div className="text-secondary flex flex-col items-end">
           <Dropdown heading={profile}>
             <div className="z-50 bg-background divide-y rounded-md shadow w-40 p-2 border-borderColor absolute top-14">
-              {profileItems()}
+              <ProfileItems />
             </div>
           </Dropdown>
         </div>
@@ -115,7 +119,7 @@ export default function CommonHeader() {
             setShowMenu(!showMenu);
           }}
         >
-          {getAdminNav()}
+          <GetAdminNav />
         </ModalPopup>
         <ModalPopup
           isOpen={showProfile}
@@ -124,7 +128,7 @@ export default function CommonHeader() {
             setShowProfile(!showProfile);
           }}
         >
-          {profileItems()}
+          <ProfileItems />
         </ModalPopup>
       </div>
     </>

@@ -11,7 +11,6 @@ import { trashIcon } from "../../assets/svgIcons";
 import SwitchButton from "../../components/commonComponents/SwitchButton";
 import Input from "../../components/commonComponents/Input";
 import Heading from "../../components/commonComponents/Heading";
-import Toaster from "../../components/commonComponents/Toaster";
 import Label from "../../components/commonComponents/Label";
 
 export default function ComponentConfig() {
@@ -66,6 +65,7 @@ export default function ComponentConfig() {
             onChange={(e) => {
               setRightName(e.target.value);
             }}
+            placeholder="Add Right"
           />
           <SwitchButton
             isChecked={isAccessibleRight.isAccessible}
@@ -95,7 +95,7 @@ export default function ComponentConfig() {
                 !excludeFields.includes(right) && (
                   <div className="flex justify-around my-4 items-center gap-10">
                     <div className="flex-1">
-                      <Label text={right} />
+                      <Label text={right} level={1} />
                     </div>
                     <SwitchButton
                       isChecked={item[right].isAccessible}
