@@ -9,6 +9,7 @@ const ProductData = createContext();
 function Context({ children }) {
   const [componentRights, setComponentRights] = useState([]);
   const [themeConfig, setThemeConfig] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const [toastInfo, setToastInfo] = useState({
     message: "",
@@ -32,6 +33,7 @@ function Context({ children }) {
       setThemeConfig(res);
     });
   };
+
   const getComponentRights = () => {
     getFeatures().then((res) => setComponentRights(res));
   };
@@ -42,10 +44,27 @@ function Context({ children }) {
       false
     );
   };
+
   useEffect(() => {
-    getThemeValues();
-    getComponentRights();
+    if (localStorage.getItem("authToken")) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
   }, []);
+  const myEvent = new CustomEvent("isAuthenticted", {
+    detail: { isAuthenticated: isAuthenticated },
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      getThemeValues();
+      getComponentRights();
+    }
+
+    document.dispatchEvent(myEvent);
+  }, [isAuthenticated]);
+
   return (
     <ProductData.Provider
       value={{
@@ -55,6 +74,8 @@ function Context({ children }) {
         getComponentRights: getComponentRights,
         isAccessibleComponent: isAccessibleComponent,
         handleToast: handleToast,
+        isAuthenticated: isAuthenticated,
+        setIsAuthenticated: setIsAuthenticated,
       }}
     >
       {componentRights.length > 0 || themeConfig.length > 0 || true ? (

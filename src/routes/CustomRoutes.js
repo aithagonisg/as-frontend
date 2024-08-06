@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ThemeConfig from "../pages/adminPages/ThemeConfig";
 import { Route, Routes } from "react-router-dom";
 import ComponentConfig from "../pages/adminPages/ComponentConfig";
@@ -8,9 +8,16 @@ import CommonLogin from "../pages/CommonLogin";
 import CommonHeader from "../components/CommonHeader";
 import CommonFooter from "../components/CommonFooter";
 import CommonRegister from "../pages/CommonRegister";
+import { ProductData } from "../Context";
 
 export default function CustomRoutes() {
-  const isAuthenticated = false;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    document.addEventListener("isAuthenticted", (event) => {
+      setIsAuthenticated(event.detail.isAuthenticated);
+    });
+  }, []);
+
   return (
     <>
       {isAuthenticated && <CommonHeader />}
@@ -58,7 +65,7 @@ export default function CustomRoutes() {
             path="/"
             element={
               <PrivateRoutes isAuthenticated={isAuthenticated}>
-                <ComponentConfig />
+                <div>This is Home</div>
               </PrivateRoutes>
             }
           />
