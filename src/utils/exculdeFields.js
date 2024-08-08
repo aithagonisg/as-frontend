@@ -30,5 +30,4 @@ export const componentRightsList = [
   "aboutUsPage",
   "contactPage",
   "headerLogo",
-  "themeNavigation",
 ];

@@ -8,7 +8,7 @@ export default function Card({ img, children }) {
       </div>
 
       <hr />
-      <div className="px-4 py-3">{children}</div>
+      <div className="px-2 py-0.5">{children}</div>
     </div>
   );
 }

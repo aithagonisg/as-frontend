@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Button from "./Button";
 import { downArrow } from "../../assets/svgIcons";
-import Label from "./Label";
 
 export default function Dropdown({
   selectedItem,
@@ -9,19 +8,24 @@ export default function Dropdown({
   heading,
   dropdownList,
   showDownArraw,
-  children,
+  listItemName = "name",
 }) {
   const [showList, setShowList] = useState(false);
 
-  const handleSelectItem = (selecteditem) => {
-    setSelecteditem(selectedItem);
+  const handleSelectItem = (selecteditemData) => {
+    setSelecteditem(selecteditemData);
+    setShowList(false);
   };
 
   return (
     <>
       <Button
-        text={selectedItem ? selectedItem : heading || "Select Item"}
-        bgColor={`relative ${
+        text={
+          selectedItem && selectedItem[listItemName]
+            ? selectedItem[listItemName]
+            : heading || "Select Item"
+        }
+        bgColor={`relative mb-1 ${
           showDownArraw
             ? "bg-background h-10 w-40 border border-borderColor"
             : ""
@@ -34,27 +38,23 @@ export default function Dropdown({
       />
       {showList && (
         <>
-          {children ? (
-            children
-          ) : (
-            <div
-              id="dropdown"
-              class="z-50 bg-background divide-y rounded-md shadow w-40 p-2 relative top-[-12px] border-borderColor"
-            >
-              <ul aria-labelledby="dropdownDefaultButton">
-                {dropdownList.map((item) => (
-                  <li
-                    onClick={() => {
-                      handleSelectItem(item);
-                    }}
-                    className="py-1"
-                  >
-                    <Label text={item.name} />
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <div
+            id="dropdown"
+            class="z-50 top-auto bg-background divide-y rounded-md shadow w-40 p-2 absolute border-borderColor"
+          >
+            <ul aria-labelledby="dropdownDefaultButton">
+              {dropdownList.map((item) => (
+                <li
+                  onClick={() => {
+                    handleSelectItem(item);
+                  }}
+                  className="py-1 cursor-pointer"
+                >
+                  {item[listItemName]}
+                </li>
+              ))}
+            </ul>
+          </div>
         </>
       )}
     </>

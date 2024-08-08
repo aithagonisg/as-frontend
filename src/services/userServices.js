@@ -19,3 +19,7 @@ export const loginUser = (payload) => {
     body: JSON.stringify(payload),
   }).then((res) => res.json());
 };
+
+export const getUserList = () => {
+  return fetch(`${END_POINT}/v1/common/getUsers`).then((res) => res.json());
+};

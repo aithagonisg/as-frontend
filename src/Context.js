@@ -4,12 +4,16 @@ import { createContext } from "react";
 import { getFeatures } from "./services/featureServices";
 import { getThemes } from "./services/themeServices";
 import Toaster from "./components/commonComponents/Toaster";
+import { getUserList } from "./services/userServices";
 
 const ProductData = createContext();
 function Context({ children }) {
   const [componentRights, setComponentRights] = useState([]);
   const [themeConfig, setThemeConfig] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [usersList, setUsersList] = useState([]);
+  const [currentUserRights, setCurrentUserRights] = useState([]);
+  const [currentUserThemes, setCurrentUserThemes] = useState([]);
 
   const [toastInfo, setToastInfo] = useState({
     message: "",
@@ -28,20 +32,30 @@ function Context({ children }) {
     }, 3000);
   };
 
-  const getThemeValues = () => {
-    getThemes().then((res) => {
+  const getThemeValues = (userId) => {
+    getThemes(userId).then((res) => {
       setThemeConfig(res);
     });
   };
 
-  const getComponentRights = () => {
-    getFeatures().then((res) => setComponentRights(res));
+  const getComponentRights = (userId) => {
+    getFeatures(userId).then((res) => setComponentRights(res));
+  };
+
+  const getCurrentThemeValues = () => {
+    getThemes().then((res) => {
+      setCurrentUserThemes(res);
+    });
+  };
+
+  const getCurrentComponentRights = () => {
+    getFeatures().then((res) => setCurrentUserRights(res));
   };
 
   const isAccessibleComponent = (rightName) => {
     return (
-      componentRights.filter((item) => item[rightName]?.isAccessible)[0] ||
-      false
+      currentUserRights?.filter((item) => item.featureName === rightName)[0]
+        ?.featureValue || false
     );
   };
 
@@ -52,17 +66,18 @@ function Context({ children }) {
       setIsAuthenticated(false);
     }
   }, []);
-  const myEvent = new CustomEvent("isAuthenticted", {
-    detail: { isAuthenticated: isAuthenticated },
-  });
 
   useEffect(() => {
     if (isAuthenticated) {
-      getThemeValues();
-      getComponentRights();
+      getCurrentComponentRights();
+      getCurrentThemeValues();
     }
 
-    document.dispatchEvent(myEvent);
+    if (localStorage.getItem("role") === "Admin") {
+      getUserList().then((res) => {
+        setUsersList(res);
+      });
+    }
   }, [isAuthenticated]);
 
   return (
@@ -70,12 +85,15 @@ function Context({ children }) {
       value={{
         componentRights: componentRights,
         themeConfig: themeConfig,
+        currentUserRights: currentUserRights,
+        currentUserThemes: currentUserThemes,
         getThemeValues: getThemeValues,
         getComponentRights: getComponentRights,
         isAccessibleComponent: isAccessibleComponent,
         handleToast: handleToast,
         isAuthenticated: isAuthenticated,
         setIsAuthenticated: setIsAuthenticated,
+        usersList: usersList,
       }}
     >
       {componentRights.length > 0 || themeConfig.length > 0 || true ? (

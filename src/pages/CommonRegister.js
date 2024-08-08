@@ -15,8 +15,6 @@ export default function CommonRegister() {
   const { handleToast, setIsAuthenticated } = useContext(ProductData);
 
   const handleRegisterInfo = (e) => {
-    console.log(e.target.id);
-
     if (e.target.id === "role") {
       setRegisterInfo({
         ...registerInfo,
@@ -40,13 +38,10 @@ export default function CommonRegister() {
         Object.keys(res).map((item) => {
           localStorage.setItem(item, res[item]);
         });
-        setIsAuthenticated(true);
+
         setTimeout(() => {
-          if (res.role === "Admin") {
-            navigate("/componentRights");
-          } else {
-            navigate("/");
-          }
+          setIsAuthenticated(true);
+          navigate("/");
         });
       }, 2000);
     } else {

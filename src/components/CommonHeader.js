@@ -1,18 +1,33 @@
 import React, { useContext, useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { capIcon, hamburger, profile } from "../assets/svgIcons";
 import { ProductData } from "../Context";
 import ModalPopup from "./commonComponents/ModalPopup";
 import Button from "./commonComponents/Button";
-import Dropdown from "./commonComponents/Dropdown";
+import { toUpper } from "../utils/common";
 
 export default function CommonHeader() {
-  const { isAccessibleComponent } = useContext(ProductData);
+  const { isAccessibleComponent, setIsAuthenticated } = useContext(ProductData);
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
+  const [showDesktopProfile, setShowDesktopProfile] = useState(false);
+  const navigate = useNavigate();
 
   const GetAdminNav = () => (
     <div className="flex md:flex-row flex-col md:gap-10 gap-2  md:font-semibold font-bold">
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          `${
+            isActive
+              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+          } `
+        }
+        onClick={() => setShowMenu(false)}
+      >
+        Home
+      </NavLink>
       <NavLink
         to="/componentRights"
         className={({ isActive }) =>
@@ -26,37 +41,108 @@ export default function CommonHeader() {
       >
         ComponentRights
       </NavLink>
-      {isAccessibleComponent("themeNavigation") ? (
-        <NavLink
-          to="/themeConfig"
-          className={({ isActive }) =>
-            `${
-              isActive
-                ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
-                : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
-            }`
-          }
-          onClick={() => setShowMenu(false)}
-        >
-          ThemeRights
-        </NavLink>
-      ) : (
-        <div></div>
-      )}
+      <NavLink
+        to="/themeConfig"
+        className={({ isActive }) =>
+          `${
+            isActive
+              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+          }`
+        }
+        onClick={() => setShowMenu(false)}
+      >
+        ThemeRights
+      </NavLink>
     </div>
   );
+
+  const GetNormalUserNav = () => (
+    <div className="flex md:flex-row flex-col md:gap-10 gap-2  md:font-semibold font-bold">
+      <NavLink
+        to="/"
+        className={({ isActive }) =>
+          `${
+            isActive
+              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+          } `
+        }
+        onClick={() => setShowMenu(false)}
+      >
+        Home
+      </NavLink>
+      <NavLink
+        to="/products"
+        className={({ isActive }) =>
+          `${
+            isActive
+              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+          } `
+        }
+        onClick={() => setShowMenu(false)}
+      >
+        Products
+      </NavLink>
+      <NavLink
+        to="/contact"
+        className={({ isActive }) =>
+          `${
+            isActive
+              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+          } `
+        }
+        onClick={() => setShowMenu(false)}
+      >
+        Contact Page
+      </NavLink>
+      <NavLink
+        to="/about"
+        className={({ isActive }) =>
+          `${
+            isActive
+              ? "md:text-textSecondary md:bg-navColor/80 bg-primary text-textSecondary md:border-2 md:border-textSecondary rounded-md p-2"
+              : "md:text-textSecondary text-textPrimary p-2 md:border-2 md:border-transparent"
+          } `
+        }
+        onClick={() => setShowMenu(false)}
+      >
+        About Us
+      </NavLink>
+    </div>
+  );
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setTimeout(() => {
+      setIsAuthenticated(false);
+      navigate("/login");
+    }, 1000);
+  };
+  const email = localStorage.getItem("email");
+  const firstName = localStorage.getItem("firstName");
+  const lastName = localStorage.getItem("lastName");
 
   const ProfileItems = () => (
     <div className="text-textPrimary font-semibold">
       <ul>
         <li className="h-10 flex items-center border-b border-borderColor">
-          User Name
+          {toUpper(email)}
         </li>
-        <li className="h-10 flex items-center border-b border-borderColor">
-          Update Profile
+        <li className="h-10 flex items-center border-b border-borderColor gap-1">
+          <div>{toUpper(firstName)}</div>
+          <div>{toUpper(lastName)}</div>
         </li>
-        <li className="h-10 flex items-center border-b border-borderColor">
-          User Name
+        <li className="h-10 flex items-center border-b border-borderColor cursor-pointer">
+          Settings
+        </li>
+        <li
+          className="h-10 flex items-center border-b border-borderColor cursor-pointer"
+          onClick={handleLogout}
+        >
+          LogOut
         </li>
       </ul>
     </div>
@@ -75,15 +161,23 @@ export default function CommonHeader() {
         ) : (
           <div className="w-[125.81px]"></div>
         )}
-        <GetAdminNav />
-        <div className="text-secondary flex flex-col items-end">
-          <Dropdown heading={profile}>
-            <div className="z-50 bg-background divide-y rounded-md shadow w-40 p-2 border-borderColor absolute top-14">
-              <ProfileItems />
+        {localStorage.getItem("role") === "Admin" ? (
+          <GetAdminNav />
+        ) : (
+          <GetNormalUserNav />
+        )}
+        <div className="text-secondary flex flex-col items-end relative">
+          <div onClick={() => setShowDesktopProfile(!showDesktopProfile)}>
+            {profile}
+          </div>
+          {showDesktopProfile && (
+            <div className="top-7 absolute z-10 bg-background shadow border border-borderColor rounded-md w-44 flex justify-center">
+              {<ProfileItems />}
             </div>
-          </Dropdown>
+          )}
         </div>
       </div>
+
       <div className="md:hidden flex h-14 justify-between bg-navColor/80 items-center px-4">
         <Button
           handleClick={() => {

@@ -6,7 +6,7 @@ import { excludeFields } from "./utils/exculdeFields";
 import Button from "./components/commonComponents/Button";
 
 export default function App() {
-  const { themeConfig } = useContext(ProductData);
+  const { currentUserThemes } = useContext(ProductData);
   function hexToRgb(hex) {
     // Remove the leading '#' if it's there
     hex = hex.replace(/^#/, "");
@@ -22,18 +22,15 @@ export default function App() {
     return `${r} ${g} ${b}`; // returns a string like "68 4 191"
   }
   useEffect(() => {
-    themeConfig.forEach((item) => {
-      Object.keys(item).forEach((theme) => {
-        if (!excludeFields.includes(theme)) {
-          console.log(`--color-${theme}`, item[theme]?.value);
-          document.documentElement.style.setProperty(
-            `--color-${theme}`,
-            hexToRgb(item[theme]?.value)
-          );
-        }
-      });
+    currentUserThemes.forEach((item) => {
+      if (!excludeFields.includes(item.themeName)) {
+        document.documentElement.style.setProperty(
+          `--color-${item.themeName}`,
+          hexToRgb(item.themeValue)
+        );
+      }
     });
-  }, [themeConfig]);
+  }, [currentUserThemes]);
   return (
     <div className="h-[100vh]">
       <BrowserRouter>

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import ThemeConfig from "../pages/adminPages/ThemeConfig";
 import { Route, Routes } from "react-router-dom";
 import ComponentConfig from "../pages/adminPages/ComponentConfig";
@@ -9,14 +9,11 @@ import CommonHeader from "../components/CommonHeader";
 import CommonFooter from "../components/CommonFooter";
 import CommonRegister from "../pages/CommonRegister";
 import { ProductData } from "../Context";
+import HomePage from "../pages/adminPages/HomePage";
+import ProductsList from "../pages/userPages/ProductsList";
 
 export default function CustomRoutes() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  useEffect(() => {
-    document.addEventListener("isAuthenticted", (event) => {
-      setIsAuthenticated(event.detail.isAuthenticated);
-    });
-  }, []);
+  const { isAuthenticated } = useContext(ProductData);
 
   return (
     <>
@@ -26,7 +23,7 @@ export default function CustomRoutes() {
           isAuthenticated
             ? "h-[calc(100%-112px)] bg-bodyBackground"
             : "h-full bg-background"
-        } overflow-auto `}
+        } overflow-auto p-5`}
       >
         <Routes>
           <Route
@@ -42,6 +39,14 @@ export default function CustomRoutes() {
             element={
               <PrivateRoutes isAuthenticated={isAuthenticated}>
                 <ComponentConfig />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <PrivateRoutes isAuthenticated={isAuthenticated}>
+                <ProductsList />
               </PrivateRoutes>
             }
           />
@@ -65,7 +70,7 @@ export default function CustomRoutes() {
             path="/"
             element={
               <PrivateRoutes isAuthenticated={isAuthenticated}>
-                <div>This is Home</div>
+                <HomePage />
               </PrivateRoutes>
             }
           />
