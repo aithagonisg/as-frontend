@@ -4,7 +4,7 @@ export const themeRights = [
   "primary",
   "secondary",
   "tertiary",
-  "bodyBackground",
+  "componentBackground",
   "background",
   "disabled",
   "icons",

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import { capIcon, hamburger, profile } from "../assets/svgIcons";
+import { capIcon, cart, hamburger, profile } from "../assets/svgIcons";
 import { ProductData } from "../Context";
 import ModalPopup from "./commonComponents/ModalPopup";
 import Button from "./commonComponents/Button";
@@ -96,7 +96,7 @@ export default function CommonHeader() {
         }
         onClick={() => setShowMenu(false)}
       >
-        Contact Page
+        Contact Us
       </NavLink>
       <NavLink
         to="/about"
@@ -109,7 +109,7 @@ export default function CommonHeader() {
         }
         onClick={() => setShowMenu(false)}
       >
-        About Us
+        Your Orders
       </NavLink>
     </div>
   );
@@ -128,10 +128,10 @@ export default function CommonHeader() {
   const ProfileItems = () => (
     <div className="text-textPrimary font-semibold">
       <ul>
-        <li className="h-10 flex items-center border-b border-borderColor">
+        <li className="h-10 flex items-center border-b border-borderColor md:w-40 w-full truncate">
           {toUpper(email)}
         </li>
-        <li className="h-10 flex items-center border-b border-borderColor gap-1">
+        <li className="h-10 flex items-center border-b border-borderColor gap-1 md:w-40 w-full truncate">
           <div>{toUpper(firstName)}</div>
           <div>{toUpper(lastName)}</div>
         </li>
@@ -166,15 +166,18 @@ export default function CommonHeader() {
         ) : (
           <GetNormalUserNav />
         )}
-        <div className="text-secondary flex flex-col items-end relative">
-          <div onClick={() => setShowDesktopProfile(!showDesktopProfile)}>
-            {profile}
-          </div>
-          {showDesktopProfile && (
-            <div className="top-7 absolute z-10 bg-background shadow border border-borderColor rounded-md w-44 flex justify-center">
-              {<ProfileItems />}
+        <div className="flex gap-4 items-center">
+          <div className="text-secondary cursor-pointer">{cart}</div>
+          <div className="text-secondary flex flex-col items-end relative cursor-pointer">
+            <div onClick={() => setShowDesktopProfile(!showDesktopProfile)}>
+              {profile}
             </div>
-          )}
+            {showDesktopProfile && (
+              <div className="top-7 absolute z-10 bg-background shadow border border-borderColor rounded-md w-44 flex justify-center">
+                {<ProfileItems />}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -204,7 +207,7 @@ export default function CommonHeader() {
           }}
           leadingIcon={profile}
           bgNone={true}
-          textColor="text-textSecondary !p-1"
+          textColor="text-textSecondary !p-1 cursor-pointer"
         />
         <ModalPopup
           isOpen={showMenu}

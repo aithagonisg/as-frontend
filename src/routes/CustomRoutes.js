@@ -11,6 +11,7 @@ import CommonRegister from "../pages/CommonRegister";
 import { ProductData } from "../Context";
 import HomePage from "../pages/adminPages/HomePage";
 import ProductsList from "../pages/userPages/ProductsList";
+import ProductDetails from "../pages/userPages/ProductDetails";
 
 export default function CustomRoutes() {
   const { isAuthenticated } = useContext(ProductData);
@@ -47,6 +48,14 @@ export default function CustomRoutes() {
             element={
               <PrivateRoutes isAuthenticated={isAuthenticated}>
                 <ProductsList />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/productDetails/:id?"
+            element={
+              <PrivateRoutes isAuthenticated={isAuthenticated}>
+                <ProductDetails />
               </PrivateRoutes>
             }
           />
