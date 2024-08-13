@@ -9,9 +9,10 @@ export default function Input({
   required = false,
   placeholder = "",
   value,
+  customClass = "",
 }) {
   return (
-    <div>
+    <div className={customClass}>
       <div>
         {label && (
           <label

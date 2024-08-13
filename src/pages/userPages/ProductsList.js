@@ -14,12 +14,20 @@ export default function ProductsList() {
   const [productsList, setProductsList] = useState([]);
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(3000);
+  const [totalPages, setTotalPages] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isCategoryLoaded, setIsCategoryLoaded] = useState(false);
 
-  useEffect(() => {
-    const selectedCategories = categoriesList
-      .filter((item) => item.isChecked)
-      .map((item) => item.label);
+  // Fetch products whenever the filters change
 
+  const getProductsList = (
+    selectedCategories,
+    page,
+    minPrice,
+    maxPrice,
+    searchQuery,
+    isPage
+  ) => {
     getProducts(
       selectedCategories,
       page,
@@ -27,28 +35,96 @@ export default function ProductsList() {
       minPrice,
       maxPrice,
       searchQuery
-    ).then((res) => setProductsList(res.docs));
-  }, [categoriesList, page, minPrice, maxPrice, searchQuery]);
+    ).then((res) => {
+      setTotalPages(res.totalPages);
+      if (isPage) {
+        setProductsList((prev) => {
+          const newProducts = res.docs.filter(
+            (newProduct) =>
+              !prev.some((prevProduct) => prevProduct._id === newProduct._id)
+          );
+          return [...prev, ...newProducts];
+        });
+      } else {
+        setProductsList(res.docs);
+      }
+
+      setIsLoading(false);
+    });
+  };
+  useEffect(() => {
+    const selectedCategories = categoriesList
+      .filter((item) => item.isChecked)
+      .map((item) => item.label);
+    if (isCategoryLoaded) {
+      getProductsList(
+        selectedCategories,
+        1,
+        minPrice,
+        maxPrice,
+        searchQuery,
+        false
+      );
+    }
+  }, [categoriesList, minPrice, maxPrice, searchQuery]);
 
   useEffect(() => {
-    getCategories().then((res) => {
-      const catego = res.map((item, index) => ({
-        id: index,
-        label: item,
-        isChecked: false,
-      }));
-      setCategoriesList(catego);
-    });
+    const selectedCategories = categoriesList
+      .filter((item) => item.isChecked)
+      .map((item) => item.label);
+    getProductsList(
+      selectedCategories,
+      page,
+      minPrice,
+      maxPrice,
+      searchQuery,
+      true
+    );
+  }, [page]);
+
+  // Fetch categories on initial render
+  useEffect(() => {
+    getCategories()
+      .then((res) => {
+        const catego = res.map((item, index) => ({
+          id: index,
+          label: item,
+          isChecked: false,
+        }));
+        setCategoriesList(catego);
+        setIsCategoryLoaded(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setIsCategoryLoaded(true);
+      });
   }, []);
+
+  // Handle scroll event to load more products when reaching the bottom
+
+  const handleScroll = () => {
+    const productListElement = document.getElementById("productList");
+
+    if (
+      productListElement.scrollTop + productListElement.clientHeight + 1 >=
+        productListElement.scrollHeight &&
+      !isLoading &&
+      page < totalPages
+    ) {
+      setIsLoading(true);
+      setPage((prevPage) => prevPage + 1);
+    }
+  };
 
   const handleCategory = (event) => {
     const selectedCategories = categoriesList.map((item) => {
-      if (item.id === event.target.id) {
+      if (item.id == event.target.id) {
         return { ...item, isChecked: event.target.value };
       } else {
         return item;
       }
     });
+    console.log(selectedCategories);
 
     setCategoriesList(selectedCategories);
   };
@@ -60,7 +136,11 @@ export default function ProductsList() {
   const handleDebounce = useDebounce(handleSearchProduct, 400);
 
   return (
-    <div className="flex">
+    <div
+      className="flex p-5 h-full overflow-auto"
+      id="productList"
+      onScroll={handleScroll}
+    >
       <div className="w-[18%] border-r border-borderColor mr-1">
         <div>
           <Heading text="Filters" boldClass="font-bold" />
@@ -78,11 +158,12 @@ export default function ProductsList() {
         </div>
 
         <div className="my-2">
-          <Heading text="Catgoires" level={2} boldClass="font-semibold" />
+          <Heading text="Categories" level={2} boldClass="font-semibold" />
         </div>
         <div className="flex flex-col gap-2">
           {categoriesList.map((item) => (
             <Checkbox
+              key={item.id}
               id={item.id}
               labelText={item.label}
               handleCheckbox={handleCategory}
@@ -91,19 +172,20 @@ export default function ProductsList() {
           ))}
         </div>
       </div>{" "}
-      <div className="w-[81%] ">
+      <div className="w-[81%]">
         <div className="flex flex-col gap-4">
           <div className="w-full flex justify-end items-end ">
             <Input
               placeholder="search products"
               type="text"
               onChange={handleDebounce}
+              customClass="w-80"
             />
           </div>
           <div>
             <div className="flex flex-wrap gap-4">
               {productsList.map((item) => (
-                <Product data={item} />
+                <Product key={item._id} data={item} />
               ))}
             </div>
           </div>

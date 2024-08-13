@@ -2,8 +2,8 @@ import React from "react";
 
 export default function Card({ img, children }) {
   return (
-    <div className="bg-background border w-[320px] h-[320px] border-borderColor rounded-md shadow">
-      <div className="[320px] h-[240px] justify-center flex">
+    <div className="bg-background border w-[320px] h-[320px] border-borderColor rounded-md shadow ">
+      <div className="[320px] h-[240px] justify-center flex p-1">
         <img src={img} alt="" />
       </div>
 

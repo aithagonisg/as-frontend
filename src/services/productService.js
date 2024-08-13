@@ -15,7 +15,7 @@ export const getProducts = (
     },
     body: JSON.stringify({
       page: page,
-      limit: 25,
+      limit: 8,
       categories: [...categoriesList],
       brand: brand,
       priceMin: priceMin,
@@ -23,6 +23,12 @@ export const getProducts = (
       search: search,
     }),
   }).then((res) => res.json());
+};
+
+export const getProduct = (id) => {
+  return fetch(`${END_POINT}/v1/common/product?productId=${id}`).then((res) =>
+    res.json()
+  );
 };
 
 export const getCategories = () => {

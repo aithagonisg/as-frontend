@@ -17,14 +17,13 @@ export default function CustomRoutes() {
   const { isAuthenticated } = useContext(ProductData);
 
   return (
-    <>
+    <div className={isAuthenticated ? "grid-container" : ""}>
       {isAuthenticated && <CommonHeader />}
       <div
         className={`${
-          isAuthenticated
-            ? "h-[calc(100%-112px)] bg-bodyBackground"
-            : "h-full bg-background"
-        } overflow-auto p-5`}
+          isAuthenticated ? "bg-bodyBackground" : "h-full bg-background"
+        }`}
+        id="body"
       >
         <Routes>
           <Route
@@ -86,6 +85,6 @@ export default function CustomRoutes() {
         </Routes>
       </div>
       {isAuthenticated && <CommonFooter />}
-    </>
+    </div>
   );
 }

@@ -149,7 +149,10 @@ export default function CommonHeader() {
   );
   return (
     <>
-      <div className="md:flex h-14 justify-between bg-navColor/80 items-center px-4 hidden">
+      <div
+        className="md:flex h-14 justify-between bg-navColor/80 items-center px-4 hidden"
+        id="heading"
+      >
         {isAccessibleComponent("headerLogo") ? (
           <div className="text-[#fff] bg-[#3871FF] h-14 flex gap-1 justify-center items-center p-2 rounded-md">
             {capIcon}
@@ -167,7 +170,12 @@ export default function CommonHeader() {
           <GetNormalUserNav />
         )}
         <div className="flex gap-4 items-center">
-          <div className="text-secondary cursor-pointer">{cart}</div>
+          <div className="text-secondary cursor-pointer relative">
+            <span>{cart}</span>
+            <div className="h-6 w-6 rounded-[50%] bg-background absolute text-center -top-3 left-3">
+              <span className="text-[red] font-semibold ">0</span>
+            </div>
+          </div>
           <div className="text-secondary flex flex-col items-end relative cursor-pointer">
             <div onClick={() => setShowDesktopProfile(!showDesktopProfile)}>
               {profile}
