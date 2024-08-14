@@ -38,7 +38,7 @@ const RangeSlider = ({ minPrice, setMinPrice, maxPrice, setMaxPrice }) => {
             max={max}
             value={minPrice}
             onChange={(e) => setMinPrice(Number(e.target.value))}
-            className={`absolute appearance-none z-20 h-2 w-full opacity-0 ${
+            className={`absolute appearance-none z-20 h-1 w-full opacity-0 ${
               !isMax ? "cursor-pointer" : "pointer-events-none"
             }`}
           />
@@ -53,10 +53,10 @@ const RangeSlider = ({ minPrice, setMinPrice, maxPrice, setMaxPrice }) => {
             onChange={(e) => setMaxPrice(Number(e.target.value))}
             className={`absolute ${
               isMax ? "cursor-pointer" : "pointer-events-none"
-            } appearance-none z-20 h-2 w-full opacity-0`}
+            } appearance-none z-20 h-1 w-full opacity-0`}
           />
 
-          <div className="relative z-10 h-2">
+          <div className="relative z-10 h-1">
             <div className="absolute z-10 left-0 right-0 bottom-0 top-0 rounded-md bg-gray-200  hover:cursor-pointer"></div>
             <div
               className="absolute z-20 top-0 bottom-0 rounded-md bg-primary"
@@ -64,19 +64,19 @@ const RangeSlider = ({ minPrice, setMinPrice, maxPrice, setMaxPrice }) => {
             ></div>
             <div
               id="minThumb"
-              className="absolute z-30 w-6 h-6 top-0 bg-primary rounded-full -mt-2 -ml-1 hover:cursor-pointer"
+              className="absolute z-30 w-4 h-4 top-0.5 bg-primary rounded-full -mt-2 -ml-1 hover:cursor-pointer"
               style={{ left: `${minThumb}%` }}
               onMouseEnter={() => setIsMax(false)}
             ></div>
             <div
               id="maxThumb"
-              className="absolute z-30 w-6 h-6 top-0 right-0 bg-primary rounded-full -mt-2 -mr-3 hover:cursor-pointer"
+              className="absolute z-30 w-4 h-4 top-0.5 right-0 bg-primary rounded-full -mt-2 -mr-3 hover:cursor-pointer"
               style={{ right: `${maxThumb}%` }}
               onMouseEnter={() => setIsMax(true)}
             ></div>
           </div>
         </div>
-        <div className="flex justify-between items-center py-5">
+        <div className="flex justify-between items-center py-3">
           <div>{minPrice}</div>
           <div>{maxPrice}</div>
         </div>

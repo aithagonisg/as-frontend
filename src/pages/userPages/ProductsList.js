@@ -137,16 +137,16 @@ export default function ProductsList() {
 
   return (
     <div
-      className="flex p-5 h-full overflow-auto"
+      className="flex px-5 h-full overflow-auto"
       id="productList"
       onScroll={handleScroll}
     >
-      <div className="w-[18%] border-r border-borderColor mr-1">
-        <div>
-          <Heading text="Filters" boldClass="font-bold" />
+      <div className="md:w-[18%] w-0 border-r border-borderColor mr-1 md:fixed md:block hidden py-4">
+        <div className="py-2">
+          <Heading text="Filters" level={3} boldClass="font-bold" />
         </div>
-        <div className="my-2">
-          <Heading text="Price Range" level={2} boldClass="font-semibold" />
+        <div className="py-2">
+          <Heading text="Price Range" level={4} boldClass="font-semibold" />
         </div>
         <div className="w-[80%]">
           <RangeSlider
@@ -157,8 +157,8 @@ export default function ProductsList() {
           />
         </div>
 
-        <div className="my-2">
-          <Heading text="Categories" level={2} boldClass="font-semibold" />
+        <div className="py-2">
+          <Heading text="Categories" level={4} boldClass="font-semibold" />
         </div>
         <div className="flex flex-col gap-2">
           {categoriesList.map((item) => (
@@ -172,14 +172,14 @@ export default function ProductsList() {
           ))}
         </div>
       </div>{" "}
-      <div className="w-[81%]">
+      <div className="md:w-[81%] w-full md:ml-[19%] pt-4">
         <div className="flex flex-col gap-4">
           <div className="w-full flex justify-end items-end ">
             <Input
-              placeholder="search products"
+              placeholder="Search products"
               type="text"
               onChange={handleDebounce}
-              customClass="w-80"
+              customClass="md:w-80 w-full"
             />
           </div>
           <div>

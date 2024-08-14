@@ -76,14 +76,6 @@ export default function CustomRoutes() {
             }
           />
           <Route
-            path="/cartItems"
-            element={
-              <PrivateRoutes isAuthenticated={isAuthenticated}>
-                <CartItems />
-              </PrivateRoutes>
-            }
-          />
-          <Route
             path="/login"
             element={
               <PublicRoutes isAuthenticated={isAuthenticated}>

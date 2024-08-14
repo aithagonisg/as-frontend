@@ -5,6 +5,7 @@ import { END_POINT } from "../../constants";
 import { useDispatch } from "react-redux";
 import Button from "../../components/commonComponents/Button";
 import { addItem } from "../../redux/cartSlice";
+import StarRating from "../../components/StarRating";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -51,23 +52,27 @@ export default function ProductDetails() {
         <div class="lg:w-4/5 mx-auto flex flex-wrap ">
           <img
             alt="ecommerce"
-            class="lg:w-1/2 w-full object-cover object-center rounded border border-gray-200 h-[430px]"
+            class="w-[300px] object-cover object-center rounded border border-gray-200 h-[395px]"
             src={`${END_POINT}${porductDetails.image_url}`}
           />
           <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            <h2 class="text-sm title-font text-textPrimary/100 tracking-widest">
-              {porductDetails.brand}
-            </h2>
-            <h1 class="text-textPrimary text-3xl title-font font-medium mb-1">
+            <h3 class="text-textPrimary title-font font-medium mb-1">
               {porductDetails.title}
-            </h1>
-            <div class="flex mb-4">
-              <span class="flex items-center">
-                Rating: {porductDetails.rating}
+            </h3>
+            <h4 class="text-sm title-font text-gray-500 tracking-widest">
+              {porductDetails.brand}
+            </h4>
+
+            <div class="flex my-4 text-gray-500">
+              <span class="flex items-center gap-2">
+                <div>Rating: </div>
+                <StarRating totalStars={5} rating={porductDetails.rating} />
               </span>
             </div>
-            <p class="leading-relaxed">{porductDetails.description}</p>
-            <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5">
+            <p class="leading-relaxed text-gray-500">
+              {porductDetails.description}
+            </p>
+            <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5 text-gray-500">
               <div class="flex gap-1">
                 <span class="mr-3">Color</span>
                 {porductDetails?.colors?.map((color) => (
@@ -114,7 +119,7 @@ export default function ProductDetails() {
                 </div>
               )}
             </div>
-            <div className="flex gap-2 justify-between">
+            <div className="flex gap-2 justify-between text-gray-500">
               <div className="flex my-2 flex-col gap-2">
                 <div>
                   In Stock:{" "}
@@ -129,18 +134,20 @@ export default function ProductDetails() {
                   </div>
                 )}
               </div>
-              <span class="title-font text-textPrimary flex flex-col gap-1">
-                <span>
+              <span class="title-font text-gray-500 flex flex-col gap-1">
+                <span className="text-error">
                   <span>Total Price: </span>
-                  <span className="price-container">
-                    <span className="price">${porductDetails.price}</span>
+                  <span>
+                    <span className="line-through text-error">
+                      ${porductDetails.price}
+                    </span>
                   </span>
                 </span>
                 {porductDetails.discountPercentage && (
                   <span>
-                    <span>Discount Price:</span>
+                    <span>Discount Price: </span>
                     <span className="text-xl font-medium">
-                      ${" "}
+                      $
                       {getDiscountPrice(
                         porductDetails.price,
                         porductDetails.discountPercentage

@@ -6,12 +6,14 @@ import ModalPopup from "./commonComponents/ModalPopup";
 import Button from "./commonComponents/Button";
 import { toUpper } from "../utils/common";
 import { useSelector } from "react-redux";
+import CartItems from "../pages/userPages/CartItems";
 
 export default function CommonHeader() {
   const { isAccessibleComponent, setIsAuthenticated } = useContext(ProductData);
   const [showMenu, setShowMenu] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showDesktopProfile, setShowDesktopProfile] = useState(false);
+  const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
   const data = useSelector((state) => state);
 
@@ -175,7 +177,7 @@ export default function CommonHeader() {
           <div
             className="text-secondary cursor-pointer relative"
             onClick={() => {
-              navigate("/cartItems");
+              setShowCart(true);
             }}
           >
             <span>{cart}</span>
@@ -197,7 +199,6 @@ export default function CommonHeader() {
           </div>
         </div>
       </div>
-
       <div className="md:hidden flex h-14 justify-between bg-navColor/80 items-center px-4">
         <Button
           handleClick={() => {
@@ -245,6 +246,7 @@ export default function CommonHeader() {
           <ProfileItems />
         </ModalPopup>
       </div>
+      {showCart && <CartItems setShowCart={setShowCart} />}
     </>
   );
 }
