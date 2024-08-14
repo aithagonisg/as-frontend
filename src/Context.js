@@ -14,7 +14,6 @@ function Context({ children }) {
   const [usersList, setUsersList] = useState([]);
   const [currentUserRights, setCurrentUserRights] = useState([]);
   const [currentUserThemes, setCurrentUserThemes] = useState([]);
-
   const [toastInfo, setToastInfo] = useState({
     message: "",
     iconName: "",

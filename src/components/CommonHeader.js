@@ -5,6 +5,7 @@ import { ProductData } from "../Context";
 import ModalPopup from "./commonComponents/ModalPopup";
 import Button from "./commonComponents/Button";
 import { toUpper } from "../utils/common";
+import { useSelector } from "react-redux";
 
 export default function CommonHeader() {
   const { isAccessibleComponent, setIsAuthenticated } = useContext(ProductData);
@@ -12,6 +13,7 @@ export default function CommonHeader() {
   const [showProfile, setShowProfile] = useState(false);
   const [showDesktopProfile, setShowDesktopProfile] = useState(false);
   const navigate = useNavigate();
+  const data = useSelector((state) => state);
 
   const GetAdminNav = () => (
     <div className="flex md:flex-row flex-col md:gap-10 gap-2  md:font-semibold font-bold">
@@ -170,10 +172,17 @@ export default function CommonHeader() {
           <GetNormalUserNav />
         )}
         <div className="flex gap-4 items-center">
-          <div className="text-secondary cursor-pointer relative">
+          <div
+            className="text-secondary cursor-pointer relative"
+            onClick={() => {
+              navigate("/cartItems");
+            }}
+          >
             <span>{cart}</span>
             <div className="h-6 w-6 rounded-[50%] bg-background absolute text-center -top-3 left-3">
-              <span className="text-[red] font-semibold ">0</span>
+              <span className="text-[red] font-semibold ">
+                {data?.cart?.totalItems}
+              </span>
             </div>
           </div>
           <div className="text-secondary flex flex-col items-end relative cursor-pointer">

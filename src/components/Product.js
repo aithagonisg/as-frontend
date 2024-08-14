@@ -5,9 +5,27 @@ import Heading from "./commonComponents/Heading";
 import Label from "./commonComponents/Label";
 import Button from "./commonComponents/Button";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addItem } from "../redux/cartSlice";
+import { addCartItems } from "../services/productService";
 
 export default function Product({ data }) {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const handleAddToCart = (productData) => {
+    const filteredProduct = {
+      ...productData,
+      colors: productData.colors[0] || "",
+      sizes: productData.sizes[0] || "",
+    };
+    addCartItems(filteredProduct)
+      .then((res) => {
+        dispatch(addItem(filteredProduct));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <div>
       <Card img={`${END_POINT}${data.image_url}`}>
@@ -37,7 +55,13 @@ export default function Product({ data }) {
                 boldClass="font-bold"
                 text={`$${data.price}`}
               />
-              <Button text="Add To Cart" bgColor="bg-primary" />
+              <Button
+                text="Add To Cart"
+                bgColor="bg-primary"
+                handleClick={() => {
+                  handleAddToCart(data);
+                }}
+              />
             </div>
           </div>
         </div>

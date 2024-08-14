@@ -34,3 +34,31 @@ export const getProduct = (id) => {
 export const getCategories = () => {
   return fetch(`${END_POINT}/v1/user/getCategories`).then((res) => res.json());
 };
+
+// "/v1/user/get-from-cart"
+export const getItemsFromCart = () => {
+  return fetch(`${END_POINT}/v1/user/get-from-cart`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem("userId"),
+    }),
+  }).then((res) => res.json());
+};
+
+export const addCartItems = (productItem) => {
+  return fetch(`${END_POINT}/v1/user/add-to-cart`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem("userId"),
+      productDetails: productItem,
+    }),
+  }).then((res) => res.json());
+};
+
+export const removeCartItems = () => {};

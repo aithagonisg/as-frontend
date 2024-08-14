@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import ThemeConfig from "../pages/adminPages/ThemeConfig";
 import { Route, Routes } from "react-router-dom";
 import ComponentConfig from "../pages/adminPages/ComponentConfig";
@@ -12,9 +12,26 @@ import { ProductData } from "../Context";
 import HomePage from "../pages/adminPages/HomePage";
 import ProductsList from "../pages/userPages/ProductsList";
 import ProductDetails from "../pages/userPages/ProductDetails";
+import { getItemsFromCart } from "../services/productService";
+import { useDispatch } from "react-redux";
+import { addItem } from "../redux/cartSlice";
+import CartItems from "../pages/userPages/CartItems";
 
 export default function CustomRoutes() {
   const { isAuthenticated } = useContext(ProductData);
+  const dispatch = useDispatch();
+  useEffect(() => {
+    const getCartItems = () => {
+      getItemsFromCart().then((res) => {
+        res.cart.map((item) => {
+          dispatch(addItem(item));
+        });
+      });
+    };
+    if (isAuthenticated) {
+      getCartItems();
+    }
+  }, [isAuthenticated]);
 
   return (
     <div className={isAuthenticated ? "grid-container" : ""}>
@@ -55,6 +72,14 @@ export default function CustomRoutes() {
             element={
               <PrivateRoutes isAuthenticated={isAuthenticated}>
                 <ProductDetails />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/cartItems"
+            element={
+              <PrivateRoutes isAuthenticated={isAuthenticated}>
+                <CartItems />
               </PrivateRoutes>
             }
           />

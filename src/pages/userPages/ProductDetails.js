@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProduct } from "../../services/productService";
+import { addCartItems, getProduct } from "../../services/productService";
 import { END_POINT } from "../../constants";
+import { useDispatch } from "react-redux";
+import Button from "../../components/commonComponents/Button";
+import { addItem } from "../../redux/cartSlice";
 
 export default function ProductDetails() {
   const { id } = useParams();
   const [porductDetails, setProductDetails] = useState({});
+  const [selectedColor, setSelectedColor] = useState("");
+  const [selectedSize, setSelectedSize] = useState("");
 
   useEffect(() => {
-    getProduct(id).then((res) => setProductDetails(res));
+    getProduct(id).then((res) => {
+      setProductDetails(res);
+      setSelectedColor(res?.colors[0]?.toLowerCase() || "");
+      setSelectedSize(res?.sizes[0]?.toLowerCase() || "");
+    });
   }, [id]);
 
   const getDiscountPrice = (actualPrice, discount) => {
@@ -16,6 +25,26 @@ export default function ProductDetails() {
     return discountPrice.toFixed();
   };
 
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (productData) => {
+    const filteredProduct = {
+      ...productData,
+      colors: selectedColor || "",
+      sizes: selectedSize || "",
+    };
+    addCartItems(filteredProduct)
+      .then((res) => {
+        dispatch(addItem(filteredProduct));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleSelectSize = (e) => {
+    setSelectedSize(e.target.value);
+  };
   return (
     <section class="text-gray-700 body-font overflow-hidden bg-white">
       <div class="container px-5 py-5 mx-auto">
@@ -43,8 +72,15 @@ export default function ProductDetails() {
                 <span class="mr-3">Color</span>
                 {porductDetails?.colors?.map((color) => (
                   <button
-                    class="border-2 rounded-full w-6 h-6 focus:outline-none"
+                    class={`border-2 w-6 h-6 focus:outline-none ${
+                      selectedColor === color.toLowerCase()
+                        ? ""
+                        : "rounded-full"
+                    }`}
                     style={{ backgroundColor: color.toLowerCase() }}
+                    onClick={() => {
+                      setSelectedColor(color.toLowerCase());
+                    }}
                   ></button>
                 ))}
               </div>
@@ -52,9 +88,13 @@ export default function ProductDetails() {
                 <div class="flex ml-6 items-center">
                   <span class="mr-3">Size</span>
                   <div class="relative">
-                    <select class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-red-500 text-base pl-3 pr-10">
+                    <select
+                      value={selectedSize}
+                      onChange={handleSelectSize}
+                      class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-red-500 text-base pl-3 pr-10"
+                    >
                       {porductDetails?.sizes?.map((item) => (
-                        <option>{item}</option>
+                        <option value={item}>{item}</option>
                       ))}
                     </select>
                     <span class="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
@@ -112,9 +152,13 @@ export default function ProductDetails() {
             </div>
 
             <div class="flex">
-              <button class="flex ml-auto text-white bg-primary border-0 py-2 px-6 focus:outline-none hover:bg-primary/100 rounded">
-                Add To Cart
-              </button>
+              <Button
+                text="Add To Cart"
+                bgColor="bg-primary"
+                handleClick={() => {
+                  handleAddToCart(porductDetails);
+                }}
+              />
             </div>
           </div>
         </div>
