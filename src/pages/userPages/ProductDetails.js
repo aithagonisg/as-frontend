@@ -17,7 +17,7 @@ export default function ProductDetails() {
     getProduct(id).then((res) => {
       setProductDetails(res);
       setSelectedColor(res?.colors[0]?.toLowerCase() || "");
-      setSelectedSize(res?.sizes[0]?.toLowerCase() || "");
+      setSelectedSize(res?.sizes[0] || "");
     });
   }, [id]);
 
@@ -43,9 +43,11 @@ export default function ProductDetails() {
       });
   };
 
-  const handleSelectSize = (e) => {
-    setSelectedSize(e.target.value);
+  const handleSelectSize = (item) => {
+    setSelectedSize(item);
   };
+  console.log(porductDetails, selectedSize);
+
   return (
     <section class="text-gray-700 body-font overflow-hidden bg-white">
       <div class="container px-5 py-5 mx-auto">
@@ -56,87 +58,12 @@ export default function ProductDetails() {
             src={`${END_POINT}${porductDetails.image_url}`}
           />
           <div class="lg:w-1/2 w-full lg:pl-10 lg:py-6 mt-6 lg:mt-0">
-            <h3 class="text-textPrimary title-font font-medium mb-1">
-              {porductDetails.title}
-            </h3>
-            <h4 class="text-sm title-font text-gray-500 tracking-widest">
-              {porductDetails.brand}
-            </h4>
-
-            <div class="flex my-4 text-gray-500">
-              <span class="flex items-center gap-2">
-                <div>Rating: </div>
-                <StarRating totalStars={5} rating={porductDetails.rating} />
-              </span>
-            </div>
-            <p class="leading-relaxed text-gray-500">
-              {porductDetails.description}
-            </p>
-            <div class="flex mt-6 items-center pb-5 border-b-2 border-gray-200 mb-5 text-gray-500">
-              <div class="flex gap-1">
-                <span class="mr-3">Color</span>
-                {porductDetails?.colors?.map((color) => (
-                  <button
-                    class={`border-2 w-6 h-6 focus:outline-none ${
-                      selectedColor === color.toLowerCase()
-                        ? ""
-                        : "rounded-full"
-                    }`}
-                    style={{ backgroundColor: color.toLowerCase() }}
-                    onClick={() => {
-                      setSelectedColor(color.toLowerCase());
-                    }}
-                  ></button>
-                ))}
-              </div>
-              {porductDetails?.sizes?.length > 0 && (
-                <div class="flex ml-6 items-center">
-                  <span class="mr-3">Size</span>
-                  <div class="relative">
-                    <select
-                      value={selectedSize}
-                      onChange={handleSelectSize}
-                      class="rounded border appearance-none border-gray-400 py-2 focus:outline-none focus:border-red-500 text-base pl-3 pr-10"
-                    >
-                      {porductDetails?.sizes?.map((item) => (
-                        <option value={item}>{item}</option>
-                      ))}
-                    </select>
-                    <span class="absolute right-0 top-0 h-full w-10 text-center text-gray-600 pointer-events-none flex items-center justify-center">
-                      <svg
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        class="w-4 h-4"
-                        viewBox="0 0 24 24"
-                      >
-                        <path d="M6 9l6 6 6-6"></path>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="flex gap-2 justify-between text-gray-500">
-              <div className="flex my-2 flex-col gap-2">
-                <div>
-                  In Stock:{" "}
-                  <span className="font-medium">{porductDetails.stock}</span>
-                </div>
-                {porductDetails.discountPercentage && (
-                  <div>
-                    Discount:{" "}
-                    <span className="font-medium">
-                      {porductDetails.discountPercentage} %
-                    </span>
-                  </div>
-                )}
-              </div>
-              <span class="title-font text-gray-500 flex flex-col gap-1">
+            <div className="flex justify-between">
+              <h3 class="text-textPrimary title-font font-medium mb-1">
+                {porductDetails.title}
+              </h3>
+              <span class="flex gap-1">
                 <span className="text-error">
-                  <span>Total Price: </span>
                   <span>
                     <span className="line-through text-error">
                       ${porductDetails.price}
@@ -145,8 +72,7 @@ export default function ProductDetails() {
                 </span>
                 {porductDetails.discountPercentage && (
                   <span>
-                    <span>Discount Price: </span>
-                    <span className="text-xl font-medium">
+                    <span className="font-medium">
                       $
                       {getDiscountPrice(
                         porductDetails.price,
@@ -158,6 +84,69 @@ export default function ProductDetails() {
               </span>
             </div>
 
+            <h4 class="text-sm title-font text-gray-500 tracking-widest">
+              {porductDetails.brand}
+            </h4>
+
+            <div class="flex my-4 text-gray-500">
+              <span class="flex items-center gap-2">
+                <div>{porductDetails.rating} </div>
+                <StarRating totalStars={5} rating={porductDetails.rating} />
+              </span>
+            </div>
+            <p class="leading-relaxed text-gray-500">
+              {porductDetails.description}
+            </p>
+            <div class="flex flex-col gap-1">
+              <div class="mb-1 font-semibold">Colors</div>
+              <div class="flex gap-1">
+                {porductDetails?.colors?.map((color) => (
+                  <span
+                    className="w-12 h-12 border-2 rounded-full p-2 box-border"
+                    style={{
+                      borderColor:
+                        selectedColor === color.toLowerCase()
+                          ? `${
+                              color.toLowerCase() === "white"
+                                ? "purple"
+                                : color.toLowerCase()
+                            }`
+                          : "",
+                    }}
+                  >
+                    <button
+                      className={`w-10 h-10 rounded-full relative -top-[6px] right-[6px]`}
+                      style={{
+                        backgroundColor: color.toLowerCase(),
+                      }}
+                      onClick={() => {
+                        setSelectedColor(color.toLowerCase());
+                      }}
+                    ></button>
+                  </span>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1 mb-1">
+              <span class="mb-1 font-semibold">Sizes</span>
+              {porductDetails?.sizes?.length > 0 && (
+                <div class="flex items-center gap-2">
+                  {porductDetails?.sizes?.map((item) => (
+                    <div
+                      className={`cursor-pointer w-10 h-10 rounded-md border-2 flex justify-center items-center font-semibold ${
+                        selectedSize === item
+                          ? "bg-primary text-textSecondary"
+                          : ""
+                      }`}
+                      onClick={() => handleSelectSize(item)}
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="mt-3 border-b-2 border-gray-200 mb-3 text-gray-500"></div>
             <div class="flex">
               <Button
                 text="Add To Cart"

@@ -71,7 +71,7 @@ export default function Product({ data }) {
             <div className="flex">
               <button
                 type="button"
-                className="font-medium text-textSecondary hover:text-primary border border-primary p-2 rounded-md bg-primary"
+                className="font-medium text-textSecondary hover:text-textSecondary border border-primary p-2 rounded-md bg-primary"
                 onClick={() => {
                   handleAddToCart(data);
                 }}

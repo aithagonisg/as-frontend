@@ -15,7 +15,8 @@ import ProductDetails from "../pages/userPages/ProductDetails";
 import { getItemsFromCart } from "../services/productService";
 import { useDispatch } from "react-redux";
 import { addItem } from "../redux/cartSlice";
-import CartItems from "../pages/userPages/CartItems";
+import Checkout from "../pages/userPages/Checkout";
+import CommonProfile from "../pages/CommonProfile";
 
 export default function CustomRoutes() {
   const { isAuthenticated } = useContext(ProductData);
@@ -64,6 +65,22 @@ export default function CustomRoutes() {
             element={
               <PrivateRoutes isAuthenticated={isAuthenticated}>
                 <ProductsList />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/checkout"
+            element={
+              <PrivateRoutes isAuthenticated={isAuthenticated}>
+                <Checkout />
+              </PrivateRoutes>
+            }
+          />
+          <Route
+            path="/profileSettings"
+            element={
+              <PrivateRoutes isAuthenticated={isAuthenticated}>
+                <CommonProfile />
               </PrivateRoutes>
             }
           />

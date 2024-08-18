@@ -21,5 +21,12 @@ export const loginUser = (payload) => {
 };
 
 export const getUserList = () => {
-  return fetch(`${END_POINT}/v1/common/getUsers`).then((res) => res.json());
+  const authToken = localStorage.getItem("authToken");
+  return fetch(`${END_POINT}/v1/common/getUsers`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: authToken,
+    },
+  }).then((res) => res.json());
 };

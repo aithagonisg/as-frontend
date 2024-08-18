@@ -8,10 +8,12 @@ export const getProducts = (
   priceMax = 2000,
   search = ""
 ) => {
+  const authToken = localStorage.getItem("authToken");
   return fetch(`${END_POINT}/v1/common/products`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      authorization: authToken,
     },
     body: JSON.stringify({
       page: page,
@@ -26,21 +28,35 @@ export const getProducts = (
 };
 
 export const getProduct = (id) => {
-  return fetch(`${END_POINT}/v1/common/product?productId=${id}`).then((res) =>
-    res.json()
-  );
+  const authToken = localStorage.getItem("authToken");
+  return fetch(`${END_POINT}/v1/common/product?productId=${id}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: authToken,
+    },
+  }).then((res) => res.json());
 };
 
 export const getCategories = () => {
-  return fetch(`${END_POINT}/v1/user/getCategories`).then((res) => res.json());
+  const authToken = localStorage.getItem("authToken");
+  return fetch(`${END_POINT}/v1/user/getCategories`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: authToken,
+    },
+  }).then((res) => res.json());
 };
 
 // "/v1/user/get-from-cart"
 export const getItemsFromCart = () => {
+  const authToken = localStorage.getItem("authToken");
   return fetch(`${END_POINT}/v1/user/get-from-cart`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      authorization: authToken,
     },
     body: JSON.stringify({
       userId: localStorage.getItem("userId"),
@@ -49,10 +65,12 @@ export const getItemsFromCart = () => {
 };
 
 export const addCartItems = (productItem) => {
+  const authToken = localStorage.getItem("authToken");
   return fetch(`${END_POINT}/v1/user/add-to-cart`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      authorization: authToken,
     },
     body: JSON.stringify({
       userId: localStorage.getItem("userId"),
@@ -61,4 +79,17 @@ export const addCartItems = (productItem) => {
   }).then((res) => res.json());
 };
 
-export const removeCartItems = () => {};
+export const removeCartItems = (productId) => {
+  const authToken = localStorage.getItem("authToken");
+  return fetch(`${END_POINT}/v1/user/remove-from-cart`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: authToken,
+    },
+    body: JSON.stringify({
+      userId: localStorage.getItem("userId"),
+      productId: productId,
+    }),
+  }).then((res) => res.json());
+};

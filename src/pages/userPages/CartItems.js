@@ -1,13 +1,24 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { END_POINT } from "../../constants";
 import { trashIcon } from "../../assets/svgIcons";
 import Button from "../../components/commonComponents/Button";
+import { useNavigate } from "react-router-dom";
+import { removeCartItems } from "../../services/productService";
+import { removeItem } from "../../redux/cartSlice";
 
 export default function CartItems({ setShowCart }) {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { cart } = useSelector((state) => state);
   const products = cart?.cart;
   const totalAmount = products.reduce((acc, cur) => acc + cur.price, 0);
+
+  const handleRemoveFromCart = (productId) => {
+    removeCartItems(productId).then((res) => {
+      dispatch(removeItem({ id: productId }));
+    });
+  };
 
   return (
     <div
@@ -97,6 +108,9 @@ export default function CartItems({ setShowCart }) {
                                   <button
                                     type="button"
                                     className="font-medium text-primary hover:text-primary"
+                                    onClick={() =>
+                                      handleRemoveFromCart(item._id)
+                                    }
                                   >
                                     Remove
                                   </button>
@@ -123,6 +137,10 @@ export default function CartItems({ setShowCart }) {
                       text="Checkout"
                       bgColor="bg-primary w-full"
                       textColor="text-textSecondary"
+                      handleClick={() => {
+                        setShowCart(false);
+                        navigate("/checkout");
+                      }}
                     />
                   </div>
                   <div className="mt-6 flex justify-center text-center text-sm text-gray-500">

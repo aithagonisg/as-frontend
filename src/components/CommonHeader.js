@@ -139,7 +139,13 @@ export default function CommonHeader() {
           <div>{toUpper(firstName)}</div>
           <div>{toUpper(lastName)}</div>
         </li>
-        <li className="h-10 flex items-center border-b border-borderColor cursor-pointer">
+        <li
+          className="h-10 flex items-center border-b border-borderColor cursor-pointer"
+          onClick={() => {
+            navigate("/profileSettings");
+            setShowProfile(false);
+          }}
+        >
           Settings
         </li>
         <li
