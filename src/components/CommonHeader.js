@@ -7,6 +7,7 @@ import Button from "./commonComponents/Button";
 import { toUpper } from "../utils/common";
 import { useSelector } from "react-redux";
 import CartItems from "../pages/userPages/CartItems";
+import { END_POINT } from "../constants";
 
 export default function CommonHeader() {
   const { isAccessibleComponent, setIsAuthenticated } = useContext(ProductData);
@@ -15,6 +16,7 @@ export default function CommonHeader() {
   const [showDesktopProfile, setShowDesktopProfile] = useState(false);
   const [showCart, setShowCart] = useState(false);
   const navigate = useNavigate();
+  const { userInfo } = useContext(ProductData);
   const data = useSelector((state) => state);
 
   const GetAdminNav = () => (
@@ -125,10 +127,10 @@ export default function CommonHeader() {
       navigate("/login");
     }, 1000);
   };
-  const email = localStorage.getItem("email");
-  const firstName = localStorage.getItem("firstName");
-  const lastName = localStorage.getItem("lastName");
-
+  const email = userInfo.email;
+  const firstName = userInfo.firstName;
+  const lastName = userInfo.lastName;
+  const profileImage = userInfo.profileImage;
   const ProfileItems = () => (
     <div className="text-textPrimary font-semibold">
       <ul>
@@ -195,7 +197,18 @@ export default function CommonHeader() {
           </div>
           <div className="text-secondary flex flex-col items-end relative cursor-pointer">
             <div onClick={() => setShowDesktopProfile(!showDesktopProfile)}>
-              {profile}
+              {profileImage ? (
+                <img
+                  src={`${END_POINT}${profileImage}`}
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "100%",
+                  }}
+                />
+              ) : (
+                profile
+              )}
             </div>
             {showDesktopProfile && (
               <div className="top-7 absolute z-10 bg-background shadow border border-borderColor rounded-md w-44 flex justify-center">
@@ -225,14 +238,27 @@ export default function CommonHeader() {
         ) : (
           <div className="w-[125.81px]"></div>
         )}
-        <Button
-          handleClick={() => {
-            setShowProfile(!showProfile);
-          }}
-          leadingIcon={profile}
-          bgNone={true}
-          textColor="text-textSecondary !p-1 cursor-pointer"
-        />
+        {profileImage ? (
+          <div
+            handleClick={() => {
+              setShowProfile(!showProfile);
+            }}
+          >
+            <img
+              src={`${END_POINT}${profileImage}`}
+              style={{ width: "40px", height: "40px", borderRadius: "100%" }}
+            />
+          </div>
+        ) : (
+          <Button
+            handleClick={() => {
+              setShowProfile(!showProfile);
+            }}
+            leadingIcon={profile}
+            bgNone={true}
+            textColor="text-textSecondary !p-1 cursor-pointer"
+          />
+        )}
         <ModalPopup
           isOpen={showMenu}
           heading="NavItems"

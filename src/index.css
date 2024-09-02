@@ -72,3 +72,8 @@ body {
   transform-origin: top left;
   border-radius: 4px;
 }
+
+.profile-image svg {
+  width: 100% !important;
+  height: 100% !important;
+}

@@ -4,7 +4,7 @@ import { createContext } from "react";
 import { getFeatures } from "./services/featureServices";
 import { getThemes } from "./services/themeServices";
 import Toaster from "./components/commonComponents/Toaster";
-import { getUserList } from "./services/userServices";
+import { getUserInfo, getUserList } from "./services/userServices";
 
 const ProductData = createContext();
 function Context({ children }) {
@@ -19,6 +19,7 @@ function Context({ children }) {
     iconName: "",
     isShow: false,
   });
+  const [userInfo, setUserInfo] = useState({});
 
   const handleToast = (message, iconName) => {
     setToastInfo({ message, iconName, isShow: true });
@@ -58,9 +59,14 @@ function Context({ children }) {
     );
   };
 
+  const getUserInfoData = () => {
+    getUserInfo().then((res) => setUserInfo(res[0]));
+  };
+
   useEffect(() => {
     if (localStorage.getItem("authToken")) {
       setIsAuthenticated(true);
+      getUserInfoData();
     } else {
       setIsAuthenticated(false);
     }
@@ -70,6 +76,7 @@ function Context({ children }) {
     if (isAuthenticated) {
       getCurrentComponentRights();
       getCurrentThemeValues();
+      getUserInfoData();
     }
 
     if (localStorage.getItem("role") === "Admin") {
@@ -93,6 +100,8 @@ function Context({ children }) {
         isAuthenticated: isAuthenticated,
         setIsAuthenticated: setIsAuthenticated,
         usersList: usersList,
+        userInfo: userInfo,
+        getUserInfoData: getUserInfoData,
       }}
     >
       {componentRights.length > 0 || themeConfig.length > 0 || true ? (

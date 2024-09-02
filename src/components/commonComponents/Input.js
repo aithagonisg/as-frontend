@@ -17,7 +17,7 @@ export default function Input({
         {label && (
           <label
             for={id}
-            class="block mb-2 text-sm font-medium text-textPrimary"
+            className="block mb-2 text-sm font-medium text-textPrimary"
           >
             {label}
           </label>
@@ -25,7 +25,9 @@ export default function Input({
         <input
           type={type}
           id={id}
-          class="bg-background border border-borderColor text-textPrimary text-sm rounded-md  px-2 focus:outline-none w-full h-10"
+          className={`bg-background border border-borderColor text-textPrimary text-sm rounded-md  px-2 focus:outline-none w-full h-10 ${
+            disabled ? "text-textDisabled cursor-not-allowed" : ""
+          }`}
           placeholder={placeholder}
           required={required}
           onChange={onChange}

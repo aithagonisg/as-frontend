@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import Button from "../../components/commonComponents/Button";
 
 export default function Checkout() {
   const { cart } = useSelector((state) => state);
@@ -119,24 +120,12 @@ export default function Checkout() {
         </div>
 
         <div class="space-y-3">
-          <button
-            type="submit"
-            class="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4  focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-          >
-            Proceed to Payment
-          </button>
-
-          <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
-            One or more items in your cart require an account.{" "}
-            <a
-              href="#"
-              title=""
-              class="font-medium text-primary-700 underline hover:no-underline dark:text-primary-500"
-            >
-              Sign in or create an account now.
-            </a>
-            .
-          </p>
+          <Button
+            text="Proceed for Payment"
+            bgColor={`relative mb-1 bg-primary h-10 w-60 border border-borderColor text-textSecondary `}
+            handleClick={() => {}}
+            textColor="text-textPrimary"
+          />
         </div>
       </div>
     </div>

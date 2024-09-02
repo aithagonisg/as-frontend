@@ -20,7 +20,9 @@ export default function CommonLogin() {
         handleToast(res.error, "error");
       } else {
         Object.keys(res).map((item) => {
-          localStorage.setItem(item, res[item]);
+          if (item === "authToken" || item === "userId") {
+            localStorage.setItem(item, res[item]);
+          }
         });
         setTimeout(() => {
           setIsAuthenticated(true);
